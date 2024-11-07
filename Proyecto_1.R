@@ -42,6 +42,16 @@ apriori_rules_2022_2018 <- apriori(data_2022_2018, parameter = list(support=0.01
 df_2022_2018 <- as(apriori_rules_2022_2018, "data.frame")
 write.csv(df_2022_2018, "C:\\files\\results\\result_2022_2018.csv")
 
+# RULES FOR DEPTORESIDEN EQUAL TO GUATEMALA
+data_2022_2018_d_g <- subset(data_2022_2018, DEPTORESIDEN == 1)
+data_2022_2018_d_g <- subset(data_2022_2018_d_g, TC == 3)
+data_2022_2018_d_g <- data_2022_2018_d_g[, !(names(data_2022_2018_d_g) %in% c("DEPTORESIDEN"))]
+data_2022_2018_d_g <- data_2022_2018_d_g[, !(names(data_2022_2018_d_g) %in% c("TC"))]
+
+apriori_rules_2022_2018_d_g <- apriori(data_2022_2018_d_g, parameter = list(support=0.005, confidence=0.3))
+df_2022_2018_d_g <- as(apriori_rules_2022_2018_d_g, "data.frame")
+write.csv(df_2022_2018_d_g, "C:\\files\\results\\result_2022_2018_d_g.csv")
+
 
 data_2022_2020 <- bind_rows(data_2022, data_2021, data_2020)
 apriori_rules_2022_2020 <- apriori(data_2022_2020, parameter = list(support=0.03, confidence=0.5))
@@ -65,4 +75,38 @@ data_2014_2009 <- bind_rows(data_2014, data_2013, data_2012, data_2011, data_201
 apriori_rules_2014_2009 <- apriori(data_2014_2009, parameter = list(support=0.03, confidence=0.5))
 df_2014_2009 <- as(apriori_rules_2014_2009, "data.frame")
 write.csv(df_2014_2009, "C:\\files\\results\\result_2014_2009.csv")
+
+
+# APPLY FP-GROWTH ALGORITHM FOR EACH DATASET.
+
+
+fp_growth_rules_2022_2018 <- fim4r(data_2022_2018, method = "fpgrowth", target="rules", supp = 0.005, conf = 0.3)
+df_fp_growth_2022_2018 <- as(fp_growth_rules_2022_2018, "data.frame")
+write.csv(df_fp_growth_2022_2018, "C:\\files\\results\\fp-growth_result_2022_2018.csv")
+
+# RULES FOR DEPTORESIDEN EQUAL TO GUATEMALA
+data_2022_2018_d_g <- subset(data_2022_2018, DEPTORESIDEN == 1)
+#data_2022_2018_d_g <- subset(data_2022_2018_d_g, TC == 3)
+data_2022_2018_d_g <- data_2022_2018_d_g[, !(names(data_2022_2018_d_g) %in% c("DEPTORESIDEN"))]
+#data_2022_2018_d_g <- data_2022_2018_d_g[, !(names(data_2022_2018_d_g) %in% c("TC"))]
+
+fp_growth_rules_2022_2018_d_g <- fim4r(data_2022_2018_d_g, method = "fpgrowth", target="rules", supp = 0.005, conf = 0.3)
+df_fp_growth_2022_2018_d_g <- as(fp_growth_rules_2022_2018_d_g, "data.frame")
+write.csv(df_fp_growth_2022_2018_d_g, "C:\\files\\results\\fp-growth_result_2022_2018_d_g.csv")
+
+
+fp_growth_rules_2019_2018 <- fim4r(data_2019_2018, method = "fpgrowth", target="rules", supp = 0.01, conf = 0.3)
+df_fp_growth_2019_2018 <- as(fp_growth_rules_2019_2018, "data.frame")
+write.csv(df_fp_growth_2019_2018, "C:\\files\\results\\fp-growth_result_2019_2018.csv")
+
+
+fp_growth_rules_2016_2015 <- fim4r(data_2016_2015, method = "fpgrowth", target="rules", supp = 0.01, conf = 0.3)
+df_fp_growth_2016_2015 <- as(fp_growth_rules_2016_2015, "data.frame")
+write.csv(df_fp_growth_2016_2015, "C:\\files\\results\\fp-growth_result_2016_2015.csv")
+
+
+fp_growth_rules_2014_2009 <- fim4r(data_2014_2009, method = "fpgrowth", target="rules", supp = 0.01, conf = 0.3)
+df_fp_growth_2014_2009 <- as(fp_growth_rules_2014_2009, "data.frame")
+write.csv(df_fp_growth_2014_2009, "C:\\files\\results\\fp-growth_result_2014_2009.csv")
+
 
