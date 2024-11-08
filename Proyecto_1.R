@@ -1,4 +1,5 @@
 # INSTALL LIBRARIES
+install.packages("arules")
 install.packages("haven")
 install.packages("dplyr")
 
