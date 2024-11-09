@@ -59,11 +59,13 @@ Adicional, es necesario instalar los siguientes paquetes:
 install.packages("arules")
 install.packages("haven")
 install.packages("dplyr")
+install.packages("ggplot2")
 
 # LOAD LIBRARIES
 library(haven)
 library(arules)
 library(dplyr)
+library(ggplot2)
 ```
 
 > ### 4. Set de datos
@@ -109,6 +111,29 @@ data_2019$MUNIRESIDEN <- labelled(data_2019$MUNIRESIDEN, labels = attr(data_2022
 data_2018$PPERTENENCIA <- labelled(data_2018$PPERTENENCIA, labels = attr(data_2022$PPERTENENCIA, "labels"))
 data_2018$DEPTORESIDEN <- labelled(data_2018$DEPTORESIDEN, labels = attr(data_2022$DEPTORESIDEN, "labels"))
 data_2018$MUNIRESIDEN <- labelled(data_2018$MUNIRESIDEN, labels = attr(data_2022$MUNIRESIDEN, "labels"))
+
+names(data_2017)[names(data_2017) == "GRUPETNICO"] <- "PPERTENENCIA"
+
+data_2017$PPERTENENCIA <- labelled(data_2017$PPERTENENCIA, labels = attr(data_2022$PPERTENENCIA, "labels"))
+data_2017$DEPTORESIDEN <- labelled(data_2017$DEPTORESIDEN, labels = attr(data_2022$DEPTORESIDEN, "labels"))
+data_2017$MUNIRESIDEN <- labelled(data_2017$MUNIRESIDEN, labels = attr(data_2022$MUNIRESIDEN, "labels"))
+
+names(data_2016)[names(data_2016) == "GRUPETNICO"] <- "PPERTENENCIA"
+
+data_2016$PPERTENENCIA <- labelled(data_2016$PPERTENENCIA, labels = attr(data_2022$PPERTENENCIA, "labels"))
+data_2016$DEPTORESIDEN <- labelled(data_2016$DEPTORESIDEN, labels = attr(data_2022$DEPTORESIDEN, "labels"))
+data_2016$MUNIRESIDEN <- labelled(data_2016$MUNIRESIDEN, labels = attr(data_2022$MUNIRESIDEN, "labels"))
+
+names(data_2015)[names(data_2015) == "GRUPETNICO"] <- "PPERTENENCIA"
+
+data_2015$PPERTENENCIA <- labelled(data_2015$PPERTENENCIA, labels = attr(data_2022$PPERTENENCIA, "labels"))
+data_2015$DEPTORESIDEN <- labelled(data_2015$DEPTORESIDEN, labels = attr(data_2022$DEPTORESIDEN, "labels"))
+data_2015$MUNIRESIDEN <- labelled(data_2015$MUNIRESIDEN, labels = attr(data_2022$MUNIRESIDEN, "labels"))
+
+
+data_2022_2015 <- bind_rows(data_2022, data_2021, data_2020, data_2019, data_2018, data_2017, data_2016, data_2015)
+data_2014_2009 <- bind_rows(data_2014, data_2013, data_2012, data_2011, data_2010, data_2009)
+
 ```
 
 __labelled__ esta función permite asignar etiquetas descriptivas a los valores, como en este caso había un problema con el set de datos de 2018 - 2019 en comparación al set de datos 2020 - 2022, lo que se hizo fue convertir las columnas que tenían problemas PPERTENENCIA, DEPTORESIDEN y MUNIRESIDEN a labelled.

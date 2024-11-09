@@ -2,11 +2,13 @@
 install.packages("arules")
 install.packages("haven")
 install.packages("dplyr")
+install.packages("ggplot2")
 
 # LOAD LIBRARIES
 library(haven)
 library(arules)
 library(dplyr)
+library(ggplot2)
 
 
 # LOAD ALL DATA BY YEAR
@@ -35,79 +37,206 @@ data_2018$PPERTENENCIA <- labelled(data_2018$PPERTENENCIA, labels = attr(data_20
 data_2018$DEPTORESIDEN <- labelled(data_2018$DEPTORESIDEN, labels = attr(data_2022$DEPTORESIDEN, "labels"))
 data_2018$MUNIRESIDEN <- labelled(data_2018$MUNIRESIDEN, labels = attr(data_2022$MUNIRESIDEN, "labels"))
 
+names(data_2017)[names(data_2017) == "GRUPETNICO"] <- "PPERTENENCIA"
+
+data_2017$PPERTENENCIA <- labelled(data_2017$PPERTENENCIA, labels = attr(data_2022$PPERTENENCIA, "labels"))
+data_2017$DEPTORESIDEN <- labelled(data_2017$DEPTORESIDEN, labels = attr(data_2022$DEPTORESIDEN, "labels"))
+data_2017$MUNIRESIDEN <- labelled(data_2017$MUNIRESIDEN, labels = attr(data_2022$MUNIRESIDEN, "labels"))
+
+names(data_2016)[names(data_2016) == "GRUPETNICO"] <- "PPERTENENCIA"
+
+data_2016$PPERTENENCIA <- labelled(data_2016$PPERTENENCIA, labels = attr(data_2022$PPERTENENCIA, "labels"))
+data_2016$DEPTORESIDEN <- labelled(data_2016$DEPTORESIDEN, labels = attr(data_2022$DEPTORESIDEN, "labels"))
+data_2016$MUNIRESIDEN <- labelled(data_2016$MUNIRESIDEN, labels = attr(data_2022$MUNIRESIDEN, "labels"))
+
+names(data_2015)[names(data_2015) == "GRUPETNICO"] <- "PPERTENENCIA"
+
+data_2015$PPERTENENCIA <- labelled(data_2015$PPERTENENCIA, labels = attr(data_2022$PPERTENENCIA, "labels"))
+data_2015$DEPTORESIDEN <- labelled(data_2015$DEPTORESIDEN, labels = attr(data_2022$DEPTORESIDEN, "labels"))
+data_2015$MUNIRESIDEN <- labelled(data_2015$MUNIRESIDEN, labels = attr(data_2022$MUNIRESIDEN, "labels"))
+
+
+data_2022_2015 <- bind_rows(data_2022, data_2021, data_2020, data_2019, data_2018, data_2017, data_2016, data_2015)
+data_2014_2009 <- bind_rows(data_2014, data_2013, data_2012, data_2011, data_2010, data_2009)
 
 # APPLY APRIORI ALGORITHM FOR EACH DATASET.
 
-data_2022_2018 <- bind_rows(data_2022, data_2021, data_2020, data_2019, data_2018)
-apriori_rules_2022_2018 <- apriori(data_2022_2018, parameter = list(support=0.01, confidence=0.5))
-df_2022_2018 <- as(apriori_rules_2022_2018, "data.frame")
-write.csv(df_2022_2018, "C:\\files\\results\\result_2022_2018.csv")
+# RULE NO.1
 
-# RULES FOR DEPTORESIDEN EQUAL TO GUATEMALA
-data_2022_2018_d_g <- subset(data_2022_2018, DEPTORESIDEN == 1)
-data_2022_2018_d_g <- subset(data_2022_2018_d_g, TC == 3)
-data_2022_2018_d_g <- data_2022_2018_d_g[, !(names(data_2022_2018_d_g) %in% c("DEPTORESIDEN"))]
-data_2022_2018_d_g <- data_2022_2018_d_g[, !(names(data_2022_2018_d_g) %in% c("TC"))]
+apriori_rules_2022_2015 <- apriori(data_2022_2015, parameter = list(support=0.0025, confidence=0.5))
+df_2022_2015 <- as(apriori_rules_2022_2015, "data.frame")
+write.csv(df_2022_2015, "C:\\files\\results\\result_apriori_r1.csv")
 
-apriori_rules_2022_2018_d_g <- apriori(data_2022_2018_d_g, parameter = list(support=0.005, confidence=0.3))
-df_2022_2018_d_g <- as(apriori_rules_2022_2018_d_g, "data.frame")
-write.csv(df_2022_2018_d_g, "C:\\files\\results\\result_2022_2018_d_g.csv")
+# RULE NO.2 - RULES FOR DEPTORESIDEN EQUAL TO GUATEMALA - región occidente
+data_2022_2015_r2 <- subset(data_2022_2015, DEPTORESIDEN %in% c(9, 7, 13, 12, 14, 8))
+
+apriori_rules_r2 <- apriori(data_2022_2015_r2, parameter = list(support=0.0025, confidence=0.3))
+df_r2 <- as(apriori_rules_r2, "data.frame")
+write.csv(df_r2, "C:\\files\\results\\result_apriori_r2.csv")
 
 
-data_2022_2020 <- bind_rows(data_2022, data_2021, data_2020)
-apriori_rules_2022_2020 <- apriori(data_2022_2020, parameter = list(support=0.03, confidence=0.5))
-df_2022_2020 <- as(apriori_rules_2022_2020, "data.frame")
-write.csv(df_2022_2020, "C:\\files\\results\\result_2022_2020.csv")
+# RULE NO.3 - lepra
+data_2022_2015_r3 <- subset(data_2022_2015, CAUFIN %in% c("A30","A300","A301","A302","A303","A304","A305","A308","A309"))
 
+apriori_rules_r3 <- apriori(data_2022_2015_r3, parameter = list(support=0.05, confidence=0.3))
+df_r3 <- as(apriori_rules_r3, "data.frame")
+write.csv(df_r3, "C:\\files\\results\\result_apriori_r3.csv")
 
-data_2019_2018 <- bind_rows(data_2019, data_2018)
-apriori_rules_2019_2018 <- apriori(data_2019_2018, parameter = list(support=0.03, confidence=0.5))
-df_2019_2018 <- as(apriori_rules_2019_2018, "data.frame")
-write.csv(df_2019_2018, "C:\\files\\results\\result_2019_2018.csv")
-
-
-data_2016_2015 <- bind_rows(data_2016, data_2015)
-apriori_rules_2016_2015 <- apriori(data_2016_2015, parameter = list(support=0.03, confidence=0.5))
-df_2016_2015 <- as(apriori_rules_2016_2015, "data.frame")
-write.csv(df_2016_2015, "C:\\files\\results\\result_2016_2015.csv")
-
-
-data_2014_2009 <- bind_rows(data_2014, data_2013, data_2012, data_2011, data_2010, data_2009)
-apriori_rules_2014_2009 <- apriori(data_2014_2009, parameter = list(support=0.03, confidence=0.5))
+# RULE NO.4 - general
+apriori_rules_2014_2009 <- apriori(data_2014_2009, parameter = list(support=0.0025, confidence=0.3))
 df_2014_2009 <- as(apriori_rules_2014_2009, "data.frame")
-write.csv(df_2014_2009, "C:\\files\\results\\result_2014_2009.csv")
+write.csv(df_2014_2009, "C:\\files\\results\\result_apriori_r4.csv")
+
+
+# RULE NO.5 - Departamento de Guatemala tipo de consulta emergencia
+data_2014_2009_r5 <- subset(data_2014_2009, DEPTORESIDEN == 1)
+data_2014_2009_r5 <- data_2014_2009_r5[, !(names(data_2014_2009_r5) %in% c("DEPTORESIDEN"))]
+
+apriori_rules_r5 <- apriori(data_2014_2009_r5, parameter = list(support=0.0025, confidence=0.2))
+df_r5 <- as(apriori_rules_r5, "data.frame")
+write.csv(df_r5, "C:\\files\\results\\result_apriori_r5.csv")
 
 
 # APPLY FP-GROWTH ALGORITHM FOR EACH DATASET.
 
+# RULE NO.1
 
-fp_growth_rules_2022_2018 <- fim4r(data_2022_2018, method = "fpgrowth", target="rules", supp = 0.005, conf = 0.3)
-df_fp_growth_2022_2018 <- as(fp_growth_rules_2022_2018, "data.frame")
-write.csv(df_fp_growth_2022_2018, "C:\\files\\results\\fp-growth_result_2022_2018.csv")
-
-# RULES FOR DEPTORESIDEN EQUAL TO GUATEMALA
-data_2022_2018_d_g <- subset(data_2022_2018, DEPTORESIDEN == 1)
-#data_2022_2018_d_g <- subset(data_2022_2018_d_g, TC == 3)
-data_2022_2018_d_g <- data_2022_2018_d_g[, !(names(data_2022_2018_d_g) %in% c("DEPTORESIDEN"))]
-#data_2022_2018_d_g <- data_2022_2018_d_g[, !(names(data_2022_2018_d_g) %in% c("TC"))]
-
-fp_growth_rules_2022_2018_d_g <- fim4r(data_2022_2018_d_g, method = "fpgrowth", target="rules", supp = 0.005, conf = 0.3)
-df_fp_growth_2022_2018_d_g <- as(fp_growth_rules_2022_2018_d_g, "data.frame")
-write.csv(df_fp_growth_2022_2018_d_g, "C:\\files\\results\\fp-growth_result_2022_2018_d_g.csv")
+data_fp_growth_r1 <- subset(data_2022_2015, TC %in% c(3,4))
+data_fp_growth_r1 <- subset(data_fp_growth_r1, MUNIRESIDEN = 0101)
+data_fp_growth_r1 <- data_fp_growth_r1[, !(names(data_fp_growth_r1) %in% c("DEPTORESIDEN"))]
+data_fp_growth_r1 <- data_fp_growth_r1[, !(names(data_fp_growth_r1) %in% c("MUNIRESIDEN"))]
 
 
-fp_growth_rules_2019_2018 <- fim4r(data_2019_2018, method = "fpgrowth", target="rules", supp = 0.01, conf = 0.3)
-df_fp_growth_2019_2018 <- as(fp_growth_rules_2019_2018, "data.frame")
-write.csv(df_fp_growth_2019_2018, "C:\\files\\results\\fp-growth_result_2019_2018.csv")
+fp_growth_rules_2022_2015 <- fim4r(data_fp_growth_r1, method = "fpgrowth", target="rules", supp = 0.0025, conf = 0.3)
+df_fp_growth_2022_2015 <- as(fp_growth_rules_2022_2015, "data.frame")
+write.csv(df_fp_growth_2022_2015, "C:\\files\\results\\fp-growth_result_r1.csv")
 
 
-fp_growth_rules_2016_2015 <- fim4r(data_2016_2015, method = "fpgrowth", target="rules", supp = 0.01, conf = 0.3)
-df_fp_growth_2016_2015 <- as(fp_growth_rules_2016_2015, "data.frame")
-write.csv(df_fp_growth_2016_2015, "C:\\files\\results\\fp-growth_result_2016_2015.csv")
+# RULE NO.2 - RULES FOR DEPTORESIDEN EQUAL - departamento de guatemala 
+data_fp_r2 <- subset(data_2022_2015, MUNIRESIDEN %in% c("0101","0102","0103","0104","0105","0106","0107","0108","0109","0110","0111","0112","0113","0114","0115","0116","0117"))
+data_fp_r2 <- data_fp_r2[, !(names(data_fp_r2) %in% c("DEPTORESIDEN"))]
+
+fp_growth_rules_r2 <- fim4r(data_fp_r2, method = "fpgrowth", target="rules", supp = 0.0025, conf = 0.3)
+df_fp_growth_r2<- as(fp_growth_rules_r2, "data.frame")
+write.csv(df_fp_growth_r2, "C:\\files\\results\\fp-growth_result_r2.csv")
+
+# RULE NO.3 - Municipio de Villa Nueva
+
+data_fp_growth_r3 <- subset(data_2022_2015, MUNIRESIDEN = 0115)
+data_fp_growth_r3 <- data_fp_growth_r3[, !(names(data_fp_growth_r3) %in% c("MUNIRESIDEN"))]
+data_fp_growth_r3 <- data_fp_r2[, !(names(data_fp_growth_r3) %in% c("DEPTORESIDEN"))]
+
+fp_growth_rules_r3 <- fim4r(data_fp_growth_r3, method = "fpgrowth", target="rules", supp = 0.0025, conf = 0.2)
+df_fp_growth_r3 <- as(fp_growth_rules_r3, "data.frame")
+write.csv(df_fp_growth_r3, "C:\\files\\results\\fp-growth_result_r3.csv")
 
 
-fp_growth_rules_2014_2009 <- fim4r(data_2014_2009, method = "fpgrowth", target="rules", supp = 0.01, conf = 0.3)
-df_fp_growth_2014_2009 <- as(fp_growth_rules_2014_2009, "data.frame")
-write.csv(df_fp_growth_2014_2009, "C:\\files\\results\\fp-growth_result_2014_2009.csv")
+# RULE NO.4 - General
+fp_growth_rules_r4 <- fim4r(data_2014_2009, method = "fpgrowth", target="rules", supp = 0.0025, conf = 0.2)
+df_fp_growth_r4 <- as(fp_growth_rules_r4, "data.frame")
+write.csv(df_fp_growth_r4, "C:\\files\\results\\fp-growth_result_r4.csv")
+
+
+# RULE NO.5 - Región occidente
+
+data_2014_2009_r5 <- subset(data_2014_2009, DEPTORESIDEN %in% c(15, 19, 12, 21, 20, 22, 6))
+data_2014_2009_r5 <- data_2014_2009_r5[, !(names(data_2014_2009_r5) %in% c("MUNIRESIDEN"))]
+
+fp_growth_rules_r5 <- fim4r(data_2014_2009_r5, method = "fpgrowth", target="rules", supp = 0.0025, conf = 0.2)
+df_fp_growth_r5<- as(fp_growth_rules_r5, "data.frame")
+write.csv(df_fp_growth_r5, "C:\\files\\results\\fp-growth_result_r5.csv")
+
+# K-MEANS
+
+# No.1
+
+data_2022_2015$EDAD[data_2022_2015$EDAD == 999] <- 99
+
+data_km1 <- subset(data_2022_2015, CAUFIN %in% c("G20X"))
+data_km1 <- data_km1[, !(names(data_km1) %in% c("CAUFIN"))]
+
+data_km1_apriori <- data_km1
+
+cluster1 <- kmeans(data_km1_apriori, centers=4)
+
+ggplot(data_km1_apriori, aes(x = DEPTORESIDEN, y = EDAD, color = as.factor(cluster1$cluster)))+
+  geom_point()+
+  geom_point(data = as.data.frame(cluster1$centers), aes(x=DEPTORESIDEN, y = EDAD), color = "black", size=4, shape=17)+
+  labs(title = "Departamento vs Edad")+
+  theme_minimal()
+
+# No.2
+
+data_km2 <- subset(data_2022_2015, CAUFIN %in% 
+    c(
+        "A30",
+        "A300",
+        "A301",
+        "A302",
+        "A303",
+        "A304",
+        "A305",
+        "A308",
+        "A309"
+    )
+)
+data_km2 <- data_km2[, !(names(data_km2) %in% c("CAUFIN"))]
+
+data_km2_apriori <- data_km2
+
+cluster2 <- kmeans(data_km2_apriori, centers=4)
+
+ggplot(data_km2_apriori, aes(x = AÑO, y = EDAD, color = as.factor(cluster2$cluster)))+
+  geom_point()+
+  geom_point(data = as.data.frame(cluster2$centers), aes(x=AÑO, y = EDAD), color = "black", size=4, shape=17)+
+  labs(title = "AÑO vs Edad")+
+  theme_minimal()
+
+
+
+# No.3 - Miopia y Astigmatismo
+
+data_km3 <- subset(data_2022_2015, CAUFIN %in% 
+                     c(
+                       "H521",
+                       "H522"
+                     )
+                   & DEPTORESIDEN != 99
+)
+
+
+data_km3 <- data_km3[, !(names(data_km3) %in% c("CAUFIN"))]
+
+data_km3_apriori <- data_km3
+
+cluster3 <- kmeans(data_km3_apriori, centers=4)
+
+ggplot(data_km3_apriori, aes(x = AÑO, y = DEPTORESIDEN, color = as.factor(cluster3$cluster)))+
+  geom_point()+
+  geom_point(data = as.data.frame(cluster3$centers), aes(x=AÑO, y = DEPTORESIDEN), color = "black", size=4, shape=17)+
+  labs(title = "Año vs Departamento")+
+  theme_minimal()
+
+# No.4 - Insomnio
+
+data_km4 <- subset(data_2022_2015, CAUFIN %in% 
+                     c(
+                       "G470",
+                       "F510"
+                     )
+)
+
+
+data_km4 <- data_km4[, !(names(data_km4) %in% c("CAUFIN"))]
+
+data_km4_apriori <- data_km4
+
+cluster4 <- kmeans(data_km4_apriori, centers=4)
+
+ggplot(data_km4_apriori, aes(x = DEPTORESIDEN, y = EDAD, color = as.factor(cluster4$cluster)))+
+  geom_point()+
+  geom_point(data = as.data.frame(cluster4$centers), aes(x=DEPTORESIDEN, y = EDAD), color = "black", size=4, shape=17)+
+  labs(title = "Departamento vs Edad")+
+  theme_minimal()
 
 
