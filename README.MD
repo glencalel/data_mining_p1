@@ -22,7 +22,7 @@ Como se observa, se tienen distintos recursos, el principal que nos interesa est
 
 ![](/imagenes/3.png)
 
-Desde el año 2022 hasta el año 2018 se tienen la misma cantidad de columnas, estas se listan a continuación:
+Desde el año 2022 hasta el año 2017 se tienen la misma cantidad de columnas, estas se listan a continuación:
 
 - Año
 - Mes
@@ -35,7 +35,7 @@ Desde el año 2022 hasta el año 2018 se tienen la misma cantidad de columnas, e
 - Tipo de Consulta
 - Causa de atención
 
-__*Nota__: el año 2017 se descartó debido a que 2 columnas son diferentes en comparación con los años 2022 - 2018, y los años 2016 - 2015 sí tienen las mismas columnas, pero debido al descarte del año 2017 más adelante unicamente se unen los años 2022-2018. Además se debe tomar en cuenta que a partir del año 2014 hasta el 2009 se tienen unicamente 9 columnas (No tienen la columna *Tipo de Consulta*).
+__*Nota__: Se debe tomar en cuenta que a partir del año 2014 hasta el 2009 se tienen unicamente 9 columnas (No tienen la columna *Tipo de Consulta*).
 
 En la siguiente imagen se puede observar de forma preliminar el contenido del diccionario.
 
@@ -129,23 +129,18 @@ names(data_2015)[names(data_2015) == "GRUPETNICO"] <- "PPERTENENCIA"
 data_2015$PPERTENENCIA <- labelled(data_2015$PPERTENENCIA, labels = attr(data_2022$PPERTENENCIA, "labels"))
 data_2015$DEPTORESIDEN <- labelled(data_2015$DEPTORESIDEN, labels = attr(data_2022$DEPTORESIDEN, "labels"))
 data_2015$MUNIRESIDEN <- labelled(data_2015$MUNIRESIDEN, labels = attr(data_2022$MUNIRESIDEN, "labels"))
-
-
-data_2022_2015 <- bind_rows(data_2022, data_2021, data_2020, data_2019, data_2018, data_2017, data_2016, data_2015)
-data_2014_2009 <- bind_rows(data_2014, data_2013, data_2012, data_2011, data_2010, data_2009)
-
 ```
 
 __labelled__ esta función permite asignar etiquetas descriptivas a los valores, como en este caso había un problema con el set de datos de 2018 - 2019 en comparación al set de datos 2020 - 2022, lo que se hizo fue convertir las columnas que tenían problemas PPERTENENCIA, DEPTORESIDEN y MUNIRESIDEN a labelled.
 
 > ### 4. Observaciones finales
 Antes de ejecutar el script por completo primero debemos unir los set de datos donde sea posible, en este caso se unirán los siguientes rangos de años:
-- 2022 - 2018
-- 2016 - 2015
+- 2022 - 2015
 - 2014 - 2009
 
 Para realizar dicha acción se utilizará la función bind_rows, en esta se indican los set de datos que se desean unir y la variable a la cual se le asignará el resultado final.
 
 ```
-data_2022_2018 <- bind_rows(data_2022, data_2021, data_2020, data_2019, data_2018)
+data_2022_2015 <- bind_rows(data_2022, data_2021, data_2020, data_2019, data_2018, data_2017, data_2016, data_2015)
+data_2014_2009 <- bind_rows(data_2014, data_2013, data_2012, data_2011, data_2010, data_2009)
 ```

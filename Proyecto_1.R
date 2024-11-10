@@ -137,7 +137,7 @@ df_fp_growth_r4 <- as(fp_growth_rules_r4, "data.frame")
 write.csv(df_fp_growth_r4, "C:\\files\\results\\fp-growth_result_r4.csv")
 
 
-# RULE NO.5 - Región occidente
+# RULE NO.5 - Corredor seco
 
 data_2014_2009_r5 <- subset(data_2014_2009, DEPTORESIDEN %in% c(15, 19, 12, 21, 20, 22, 6))
 data_2014_2009_r5 <- data_2014_2009_r5[, !(names(data_2014_2009_r5) %in% c("MUNIRESIDEN"))]
